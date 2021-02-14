@@ -7,6 +7,7 @@ const sliderContainer = document.getElementById('sliders');
 
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
+  sliderContainer.innerHTML = '';
   clearInterval(timer);
   const search = document.getElementById('search').value;
   const Key = '15674931-a9d714b6e9d654524df198e00&q';
@@ -43,11 +44,11 @@ let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
   element.classList.toggle('added');
- 
+
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
-  }else {
+  } else {
     sliders.pop(element);
   }
 }
@@ -64,34 +65,42 @@ const createSlider = () => {
     return;
   }
 
+  // hide image aria
+  imagesArea.style.display = 'none';
+
+  //show slide area
+  document.querySelector('.main').style.display = 'block';
+
+  //set images in slider
+  const duration = document.getElementById('duration').value || 1000;
+
+  sliders.forEach(slide => {
+    let item = document.createElement('div')
+    item.className = "slider-item";
+    item.innerHTML = `<img class="w-100"
+      src="${slide}" alt="">`;
+    sliderContainer.appendChild(item);
+  })
+
   // crate slider previous next area
-  sliderContainer.innerHTML = '';
+
   const prevNext = document.createElement('div');
   prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
   prevNext.innerHTML = ` 
   <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
   <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
   `;
+  sliderContainer.appendChild(prevNext);
 
-  sliderContainer.appendChild(prevNext)
-  document.querySelector('.main').style.display = 'block';
-  // hide image aria
-  imagesArea.style.display = 'none';
-  const duration = document.getElementById('duration').value || 1000;
-  sliders.forEach(slide => {
-    let item = document.createElement('div')
-    item.className = "slider-item";
-    item.innerHTML = `<img class="w-100"
-    src="${slide}"
-    alt="">`;
-    sliderContainer.appendChild(item)
-  })
+
+
   changeSlide(0)
   timer = setInterval(function () {
     slideIndex++;
     changeSlide(slideIndex);
   }, duration);
 }
+
 
 // change slider index 
 const changeItem = index => {
