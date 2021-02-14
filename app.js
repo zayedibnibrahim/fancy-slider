@@ -19,6 +19,7 @@ searchBtn.addEventListener('click', function () {
 
 const getImages = async (apiKey, query) => {
   try {
+    toggleSpinner();
     const response = await fetch(`https://pixabay.com/api/?key=${apiKey}=${query}&image_type=photo&pretty=true`);
     const data = await response.json();
     showImages(data.hits)
@@ -46,9 +47,9 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
   })
-
+  toggleSpinner();
 }
 
 let slideIndex = 0;
@@ -144,4 +145,10 @@ const changeSlide = (index) => {
   })
 
   items[index].style.display = "block"
+}
+
+//spinner
+const toggleSpinner = () => {
+  const spinner = document.getElementById("loading-spinner");
+  spinner.classList.toggle('d-none');
 }
