@@ -4,6 +4,8 @@ const galleryHeader = document.querySelector('.gallery-header');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const inputError = document.getElementById("input-error");
+
 
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
@@ -15,13 +17,22 @@ searchBtn.addEventListener('click', function () {
   sliders.length = 0;
 })
 
-const getImages = (apiKey, query) => {
-  fetch(`https://pixabay.com/api/?key=${apiKey}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
+const getImages = async (apiKey, query) => {
+  try {
+    const response = await fetch(`https://pixabay.com/api/?key=${apiKey}=${query}&image_type=photo&pretty=true`);
+    const data = await response.json();
+    showImages(data.hits)
+  }
+  catch (error) {
+    searchError();
+  }
 }
-
+//error message for search
+const searchError = () => {
+  const inputError = document.getElementById("input-error");
+  inputError.innerText = "Invalid Input";
+  inputError.style.display = "block";
+}
 // selected image 
 let sliders = [];
 
@@ -73,12 +84,17 @@ const createSlider = () => {
 
   //set images in slider
   const duration = document.getElementById('duration').value || 1000;
-
+  //number Validation
+  if (duration < 0) {
+    inputError.style.display = "block";
+    inputError.innerText = "Invalid Input Number";
+    document.querySelector(".main").style.display = "none";
+  }
   sliders.forEach(slide => {
     let item = document.createElement('div')
     item.className = "slider-item";
     item.innerHTML = `<img class="w-100"
-      src="${slide}" alt="">`;
+        src="${slide}" alt="">`;
     sliderContainer.appendChild(item);
   })
 
@@ -87,9 +103,9 @@ const createSlider = () => {
   const prevNext = document.createElement('div');
   prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
   prevNext.innerHTML = ` 
-  <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
-  <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
-  `;
+    <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
+    <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
+    `;
   sliderContainer.appendChild(prevNext);
 
 
@@ -99,6 +115,8 @@ const createSlider = () => {
     slideIndex++;
     changeSlide(slideIndex);
   }, duration);
+
+
 }
 
 
