@@ -6,6 +6,17 @@ const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
 const inputError = document.getElementById("input-error");
 
+//keyboard
+document.getElementById('search').addEventListener("keypress", function(event){
+  if(event.key == 'Enter'){
+    document.getElementById('search-btn').click();
+  }
+})
+document.getElementById("duration").addEventListener("keypress", function(event){
+  if(event.key == 'Enter'){
+    document.getElementById('create-slider').click();
+  }
+})
 
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
