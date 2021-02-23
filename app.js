@@ -72,8 +72,9 @@ const selectItem = (event, img) => {
   if (item === -1) {
     sliders.push(img);
   } else {
-    sliders.pop(element);
+    sliders.splice(item, 1);
   }
+  console.log(sliders);
 }
 // speed selector
 sliderBtn.addEventListener('click', function () {
